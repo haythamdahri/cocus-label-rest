@@ -1,6 +1,7 @@
 package com.cocus.microservices.label.services.impl;
 
 import com.cocus.microservices.bo.entities.LabelBO;
+import com.cocus.microservices.label.dto.LabelDTO;
 import com.cocus.microservices.label.dto.LabelRequestDTO;
 import com.cocus.microservices.label.exceptions.NotFoundException;
 import com.cocus.microservices.label.repositories.LabelRepository;
@@ -9,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Haytham DAHRI
@@ -28,7 +30,7 @@ public class LabelServiceImpl implements LabelService {
         if( labelRequest.getId() == null ) {
             label = new LabelBO();
         } else {
-            label = this.labelRepository.findById(labelRequest.getId()).orElse(new LabelBO());
+            label = this.getLabel(labelRequest.getId());
         }
         label.setDescription(labelRequest.getDescription());
         return this.labelRepository.save(label);
@@ -45,7 +47,9 @@ public class LabelServiceImpl implements LabelService {
     }
 
     @Override
-    public List<LabelBO> getLabels() {
-        return this.labelRepository.findAll();
+    public List<LabelDTO> getLabels() {
+        return this.labelRepository.findAll().stream().map(label ->
+                new LabelDTO(label.getId(), label.getDescription()))
+                .collect(Collectors.toList());
     }
 }

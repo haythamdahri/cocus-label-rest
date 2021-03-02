@@ -1,6 +1,7 @@
 package com.cocus.microservices.label.controllers;
 
 import com.cocus.microservices.bo.entities.LabelBO;
+import com.cocus.microservices.label.dto.LabelDTO;
 import com.cocus.microservices.label.dto.LabelRequestDTO;
 import com.cocus.microservices.label.services.LabelService;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class LabelController {
     }
 
     @GetMapping(path = "/")
-    public ResponseEntity<List<LabelBO>> getLabels() {
+    public ResponseEntity<List<LabelDTO>> getLabels() {
         return ResponseEntity.ok(this.labelService.getLabels());
     }
 

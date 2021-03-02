@@ -1,6 +1,7 @@
 package com.cocus.microservices.label.services;
 
 import com.cocus.microservices.bo.entities.LabelBO;
+import com.cocus.microservices.label.dto.LabelDTO;
 import com.cocus.microservices.label.dto.LabelRequestDTO;
 
 import java.util.List;
@@ -16,6 +17,6 @@ public interface LabelService {
 
     void deleteLabel(Long id);
 
-    List<LabelBO> getLabels();
+    List<LabelDTO> getLabels();
 
 }
