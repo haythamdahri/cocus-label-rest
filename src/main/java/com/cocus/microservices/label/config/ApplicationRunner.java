@@ -25,7 +25,7 @@ public class ApplicationRunner implements CommandLineRunner {
     public void run(String... args) {
         if( this.labelRepository.count() == 0 ) {
             // Mock Labels
-            LabelBO label = new LabelBO("Label Description", null);
+            LabelBO label = new LabelBO("Label Description");
             this.labelRepository.save(label);
         }
     }

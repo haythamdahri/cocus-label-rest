@@ -7,6 +7,10 @@ import com.cocus.microservices.label.exceptions.NotFoundException;
 import com.cocus.microservices.label.repositories.LabelRepository;
 import com.cocus.microservices.label.services.LabelService;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -44,6 +48,20 @@ public class LabelServiceImpl implements LabelService {
     @Override
     public void deleteLabel(Long id) {
         this.labelRepository.deleteById(id);
+    }
+
+    @Override
+    public Page<LabelDTO> getLabels(String search, int page, int size) {
+        Page<LabelBO> labelsPage;
+        if (StringUtils.isEmpty(search)) {
+            labelsPage = this.labelRepository.findAll(PageRequest.of(page, size, Sort.Direction.DESC, "timestamp"));
+        } else {
+            labelsPage = this.labelRepository.searchLabels(search.toLowerCase(), PageRequest.of(page, size, Sort.Direction.DESC, "timestamp"));
+        }
+        List<LabelDTO> content = labelsPage.getContent().stream().map(label ->
+                new LabelDTO(label.getId(), label.getDescription()))
+                .collect(Collectors.toList());
+        return new PageImpl<>(content, labelsPage.getPageable(), labelsPage.getTotalElements());
     }
 
     @Override

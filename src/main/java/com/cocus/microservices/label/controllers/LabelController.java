@@ -4,6 +4,7 @@ import com.cocus.microservices.bo.entities.LabelBO;
 import com.cocus.microservices.label.dto.LabelDTO;
 import com.cocus.microservices.label.dto.LabelRequestDTO;
 import com.cocus.microservices.label.services.LabelService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +24,13 @@ public class LabelController {
     }
 
     @GetMapping(path = "/")
+    public ResponseEntity<Page<LabelDTO>> getLabels(@RequestParam(value = "search", required = false, defaultValue = "") String search,
+                                                    @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+                                                    @RequestParam(value = "size", required = false, defaultValue = "${page.default-size}") int size) {
+        return ResponseEntity.ok(this.labelService.getLabels(search.trim(), page, size));
+    }
+
+    @GetMapping(path = "/list/all")
     public ResponseEntity<List<LabelDTO>> getLabels() {
         return ResponseEntity.ok(this.labelService.getLabels());
     }
