@@ -18,6 +18,8 @@
 		<spring-cloud.version>2020.0.1</spring-cloud.version>
 		<keycloak.version>12.0.3</keycloak.version>
 		<cocus-bo.version>0.0.10.RELEASE</cocus-bo.version>
+		<docker.image.prefix>cocus-microservices</docker.image.prefix>
+		<dockerfile.version>1.4.1</dockerfile.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -113,6 +115,33 @@
 				<configuration>
 					<classifier>exec</classifier>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>dockerfile-maven-plugin</artifactId>
+				<version>${dockerfile.version}</version>
+				<!-- Wire up to the default build phases -->
+				<executions>
+					<execution>
+						<id>default</id>
+						<goals>
+							<goal>build</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<repository>${docker.image.prefix}/${project.artifactId}</repository>
+					<buildArgs>
+						<JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
+					</buildArgs>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>javax.activation</groupId>
+						<artifactId>javax.activation-api</artifactId>
+						<version>1.2.0</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 	</build>
