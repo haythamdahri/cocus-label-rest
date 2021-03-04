@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>com.cocus.microservices</groupId>
 	<artifactId>label</artifactId>
-	<version>0.0.1.RELEASE</version>
+	<version>0.0.2.RELEASE-SNAPSHOT</version>
 	<name>label-rest</name>
 	<description>Label Rest Microservice</description>
 	<properties>
