@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>com.cocus.microservices</groupId>
 	<artifactId>label</artifactId>
-	<version>0.0.2.RELEASE-SNAPSHOT</version>
+	<version>0.0.2.RELEASE</version>
 	<name>label-rest</name>
 	<description>Label Rest Microservice</description>
 	<properties>
@@ -18,7 +18,6 @@
 		<keycloak.version>12.0.3</keycloak.version>
 		<cocus-bo.version>0.0.10.RELEASE</cocus-bo.version>
 		<docker.image.prefix>cocus-microservices</docker.image.prefix>
-		<dockerfile.version>1.4.1</dockerfile.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -111,34 +110,40 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<classifier>exec</classifier>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>com.spotify</groupId>
-				<artifactId>dockerfile-maven-plugin</artifactId>
-				<version>${dockerfile.version}</version>
-				<!-- Wire up to the default build phases -->
-				<executions>
-					<execution>
-						<id>default</id>
-						<goals>
-							<goal>build</goal>
-						</goals>
-					</execution>
-				</executions>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>0.2.3</version>
 				<configuration>
-					<repository>${docker.image.prefix}/${project.artifactId}</repository>
-					<buildArgs>
-						<JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
-					</buildArgs>
+					<imageName>${docker.image.prefix}/${project.artifactId}:${project.version}
+					</imageName>
+					<dockerDirectory>src/main/docker</dockerDirectory>
+					<resources>
+						<resource>
+							<directory>${project.build.directory}</directory>
+							<include>${project.build.finalName}.jar</include>
+						</resource>
+					</resources>
 				</configuration>
 				<dependencies>
+					<!-- To make this work on JDK 9+ -->
 					<dependency>
 						<groupId>javax.activation</groupId>
 						<artifactId>javax.activation-api</artifactId>
 						<version>1.2.0</version>
+					</dependency>
+					<!-- API, java.xml.bind module -->
+					<dependency>
+						<groupId>jakarta.xml.bind</groupId>
+						<artifactId>jakarta.xml.bind-api</artifactId>
+						<version>2.3.2</version>
+					</dependency>
+					<!-- Runtime, com.sun.xml.bind module -->
+					<dependency>
+						<groupId>org.glassfish.jaxb</groupId>
+						<artifactId>jaxb-runtime</artifactId>
+						<version>2.3.2</version>
 					</dependency>
 				</dependencies>
 			</plugin>
@@ -148,7 +153,6 @@
 	<scm>
 		<connection>scm:git:git@github.com:haythamdahri/cocus-lebel-rest.git</connection>
 		<developerConnection>scm:git:git@github.com:haythamdahri/cocus-label-rest.git</developerConnection>
-	  <tag>label-0.0.1.RELEASE</tag>
   </scm>
 
 </project>
